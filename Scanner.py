@@ -27,15 +27,62 @@ class Scanner:
         self.column = 0
         self.line = 1
 
+        self.single_char_to_token = {
+            '(': TokenType.LEFT_PAREN,
+            ')': TokenType.RIGHT_PAREN,
+            '{': TokenType.LEFT_BRACE,
+            '}': TokenType.RIGHT_BRACE,
+            ',': TokenType.COMMA,
+            '.': TokenType.DOT,
+            '-': TokenType.MINUS,
+            '+': TokenType.PLUS,
+            '*': TokenType.STAR,
+            ';': TokenType.SEMICOLON,
+            '/': TokenType.SLASH,
+            '!': TokenType.BANG,
+            '=': TokenType.EQUAL,
+            '<': TokenType.LESS,
+            '>': TokenType.GREATER,
+        }
+
+        self.double_char_to_token = {
+            '==': TokenType.EQUAL_EQUAL,
+            '!=': TokenType.BANG_EQUAL,
+            '<=': TokenType.LESS_EQUAL,
+            '>=': TokenType.GREATER_EQUAL,
+        }
+
+
+
+        self.reserved_keywords = {
+            "and": TokenType.AND,
+            "cartel": TokenType.CARTEL,
+            "cook": TokenType.COOK,
+            "dea": TokenType.DEA,
+            "else": TokenType.ELSE,
+            "i am the danger" : TokenType.I_AM_THE_DANGER,
+            "jesse if": TokenType.JESSE_IF,
+            "or" : TokenType.OR,
+            "say my name": TokenType.SAY_MY_NAME,
+            "we are done when i say we are done": TokenType.WE_ARE_DONE_WHEN_I_SAY_WE_ARE_DONE,
+        }
+        # Keywords that contain whitespace
+        self.whitespace_keywords = {key:self.reserved_keywords[key] for key in self.reserved_keywords if re.match(r'.*\s.*', key)}
+        # Regex string to match all whitespace keywords
+        self.matching_string = '|'.join(self.whitespace_keywords.keys())
 
     def scan_tokens(self) -> List[Token]:
+        
         while self.source:
+            did_match = False
+
             # Matches whitespace
             # Match a whitespace character any number of times that is not a newline
             match = re.match(r'[^\S\r\n]', self.source)
             if match:
                 self.column += match.end()
                 self.source = self.source[match.end():]
+                did_match = True
                 continue
             # Matches newlines to keep track of line numbers
             match = re.match(r'\n', self.source)
@@ -43,6 +90,7 @@ class Scanner:
                 self.column = 0
                 self.source = self.source[match.end():]
                 self.line += 1
+                did_match = True
                 continue
             # Matches comments
             # Match // followed by any character any number of times
@@ -50,6 +98,7 @@ class Scanner:
             if match:
                 self.column += match.end()
                 self.source = self.source[match.end():]
+                did_match = True
                 continue
             
             # Matches strings
@@ -60,6 +109,7 @@ class Scanner:
                 self.column += match.end() 
                 self.add_token(TokenType.STRING, match.group(), match.group(), pos)
                 self.source = self.source[match.end():]
+                did_match = True
                 continue
             # Check if there's an unterminated string
             match = re.match(r'\".*', self.source)
@@ -69,10 +119,75 @@ class Scanner:
                 self.jesse.error(code, pos, 'Unterminated string.')
                 break
 
-           
-                
-
-                
+            # Matches keywords with whitespace
+            match = re.match(rf'({self.matching_string})', self.source)
+            if match:
+                pos = (self.line, self.column)
+                self.column += match.end()
+                self.add_token(self.whitespace_keywords[match.group()], match.group(), None, pos)
+                self.source = self.source[match.end():]
+                did_match = True
+                continue
+            # Match identifiers
+            match = re.match(r'[a-zA-Z_][a-zA-Z_0-9]*',self.source)
+            if match:
+                pos = (self.line, self.column)
+                self.column += match.end()
+                self.add_token(self.reserved_keywords.get(match.group(), TokenType.IDENTIFIER), match.group(), None, pos)
+                self.source = self.source[match.end():]
+                did_match = True
+                continue
+            # Match meth (numbers)
+            match = re.match(r'\d+(.\d+)?', self.source)
+            if match:
+                # Try to match lb,oz,gm after the number
+                # Otherwise raise an error
+                match2 = re.match(r'lb|oz|gm', self.source[match.end():])
+                if match2:
+                    final_match = match.group()+match2.group()
+                    pos = (self.line, self.column)
+                    self.column += match.end() + 2
+                    self.add_token(TokenType.METH, final_match, final_match, pos)
+                    self.source = self.source[match.end()+2:]
+                    did_match = True
+                    continue
+                else:
+                    code = self.source[match.start():match.end()]
+                    pos = (self.line, self.column)
+                    self.jesse.error(code, pos, 'Specify a valid unit of measurement.')
+                    break
+            # Match single character tokens
+            match = re.match(r'[()\{\},\.\-+*/;]', self.source)
+            if match:
+                pos = (self.line, self.column)
+                self.column += match.end()
+                self.add_token(self.single_char_to_token[match.group()], match.group(), None, pos)
+                self.source = self.source[match.end():]
+                did_match = True
+                continue
+            # Match potential two character tokens
+            match = re.match(r'[=!<>]', self.source)
+            if match:
+                if self.source[match.start():match.end()+1] in self.double_char_to_token:
+                    pos = (self.line, self.column)
+                    self.column += match.end() + 1
+                    self.add_token(self.double_char_to_token[self.source[match.start():match.end()+1]], self.source[match.start():match.end()+1], None, pos)
+                    self.source = self.source[match.end()+1:]
+                    did_match = True
+                    continue
+                else:
+                    pos = (self.line, self.column)
+                    self.column += match.end()
+                    self.add_token(self.single_char_to_token[match.group()], match.group(), None, pos)
+                    self.source = self.source[match.end():]
+                    did_match = True
+                    continue
+            
+            if not did_match:
+                code = self.source[0]
+                pos = (self.line, self.column)
+                self.jesse.error(code, pos, 'Unexpected character.')
+                break
 
         return self.tokens
 

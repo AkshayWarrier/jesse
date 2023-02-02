@@ -35,7 +35,7 @@ class TokenType(Enum):
     ELSE = auto()
     DEA = auto() # False value
     # FUN = auto()
-    THE_ONE_WHO_KNOCKS = auto() # For loop
+    # THE_ONE_WHO_KNOCKS = auto() # For loop
     JESSE_IF = auto() # If statement
     I_AM_THE_DANGER = auto() # Null value
     OR = auto()
@@ -45,5 +45,5 @@ class TokenType(Enum):
     # THIS = auto()
     CARTEL = auto() # True value
     COOK = auto() # Variable declaration
-    # WHILE = auto()
+    WE_ARE_DONE_WHEN_I_SAY_WE_ARE_DONE = auto() # While loop
     EOF = auto()
