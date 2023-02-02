@@ -23,6 +23,7 @@ class Scanner:
     def __init__(self, jesse:Jesse, source: str):
         self.jesse = jesse
         self.source = source
+        self.lines = source.splitlines()
         self.tokens: List[Token] = []
         self.column = 0
         self.line = 1
@@ -114,9 +115,9 @@ class Scanner:
             # Check if there's an unterminated string
             match = re.match(r'\".*', self.source)
             if match:
-                code = self.source[match.start():match.end()]
+                code = self.lines[self.line-1]
                 pos = (self.line, self.column)
-                self.jesse.error(code, pos, 'Unterminated string.')
+                self.jesse.error(code, pos, 'this string is not terminated yo')
                 break
 
             # Matches keywords with whitespace
@@ -152,9 +153,9 @@ class Scanner:
                     did_match = True
                     continue
                 else:
-                    code = self.source[match.start():match.end()]
-                    pos = (self.line, self.column)
-                    self.jesse.error(code, pos, 'Specify a valid unit of measurement.')
+                    code = self.lines[self.line-1]
+                    pos = (self.line, self.column+match.end()-1)
+                    self.jesse.error(code, pos, 'what do you mean yo? grams, ounces, or pounds?')
                     break
             # Match single character tokens
             match = re.match(r'[()\{\},\.\-+*/;]', self.source)
@@ -184,9 +185,9 @@ class Scanner:
                     continue
             
             if not did_match:
-                code = self.source[0]
+                code = self.lines[self.line-1]
                 pos = (self.line, self.column)
-                self.jesse.error(code, pos, 'Unexpected character.')
+                self.jesse.error(code, pos, "i don't understand this yo")
                 break
 
         return self.tokens

@@ -12,7 +12,6 @@ class Jesse:
 
     def run(self, source: str) -> None:
         print("yeah mr white! yeah science!")
-        print()
         scanner = Scanner(self,source)
         tokens = scanner.scan_tokens()
         for token in tokens:
@@ -41,7 +40,8 @@ class Jesse:
 
     def report(self, code:str, pos: Tuple[int,int], where: str, message: str) -> None:
         print(code)
-        print(f'mr white theres a problem at line {pos[0]} column {pos[1]}: {message}')
+        print(" " * pos[1] + '^' + '-'*(len(code) - pos[1] - 1))
+        print(f'[Error {pos[0]}] yo mr white {message}')
         self.had_error = True
 
 
