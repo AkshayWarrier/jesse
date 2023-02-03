@@ -1,5 +1,6 @@
 from typing import List, Tuple
 from Scanner import Scanner
+from Parser import Parser
 
 import sys
 
@@ -14,8 +15,11 @@ class Jesse:
         print("yeah mr white! yeah science!")
         scanner = Scanner(self,source)
         tokens = scanner.scan_tokens()
-        for token in tokens:
-            print(token)
+        parser = Parser(self,source,tokens)
+        expr = parser.parse()
+        if self.had_error:
+            return
+        print(expr)
 
     def run_file(self, path: str) -> None:
         f = open(path, 'r')
@@ -36,12 +40,12 @@ class Jesse:
             self.had_error = False
 
     def error(self, code:str, pos: Tuple[int,int], message: str) -> None:
-        self.report(code,pos, '', message)
+        self.report_error(code,pos, message)
 
-    def report(self, code:str, pos: Tuple[int,int], where: str, message: str) -> None:
+    def report_error(self, code:str, pos: Tuple[int,int], message: str) -> None:
         print(code)
         print(" " * pos[1] + '^' + '-'*(len(code) - pos[1] - 1))
-        print(f'[Error {pos[0]}] yo mr white {message}')
+        print(f'[Error {pos[0]}] but mr white {message}')
         self.had_error = True
 
 

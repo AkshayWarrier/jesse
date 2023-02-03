@@ -10,7 +10,7 @@ class Scanner:
     '''
     Scanner class for the Jesse programming language. 
     It makes use of regular expressions to match tokens.
-    
+
     jesse: Jesse object
     source: Source code of the Jesse program
     '''
@@ -133,9 +133,9 @@ class Scanner:
             # Match meth (numbers)
             match = re.match(r'\d+(.\d+)?', self.source)
             if match:
-                # Try to match lb after the number
+                # Try to match gm after the number
                 # Otherwise raise an error
-                match2 = re.match(r'lb', self.source[match.end():])
+                match2 = re.match(r'gm', self.source[match.end():])
                 if match2:
                     final_match = match.group()+match2.group()
                     pos = (self.line, self.column)
@@ -147,7 +147,7 @@ class Scanner:
                 else:
                     code = self.lines[self.line-1]
                     pos = (self.line, self.column+match.end()-1)
-                    self.jesse.error(code, pos, 'do you mean pounds?')
+                    self.jesse.error(code, pos, "you haven't mentioned a unit of measurement for this number yo")
                     break
             # Match single character tokens
             match = re.match(r'[()\{\},\.\-+*/;]', self.source)
@@ -175,7 +175,16 @@ class Scanner:
                     self.source = self.source[match.end():]
                     did_match = True
                     continue
-            
+
+            # Match end of file
+            match = re.match(r'\Z', self.source)
+            if match:
+                pos = (self.line, self.column)
+                self.add_token(TokenType.EOF, "", None, pos)
+                self.source = self.source[match.end():]
+                did_match = True
+                continue
+        
             if not did_match:
                 code = self.lines[self.line-1]
                 pos = (self.line, self.column)

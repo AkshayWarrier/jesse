@@ -4,6 +4,11 @@ from TokenType import TokenType
 class Token:
     '''
     Token class for the Jesse programming language.
+    
+    token_type: TokenType object
+    lexeme: String representation of the token
+    literal: Literal value of the token if any
+    pos: Position of the token in the source code in the form (line, column)
     '''
     def __init__(self, token_type: TokenType, lexeme: str, literal: object, pos: Tuple[int,int]) -> None:
         # Token type
