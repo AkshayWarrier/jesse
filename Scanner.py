@@ -1,16 +1,7 @@
 from typing import List, Optional, Tuple, TypeVar
 from Token import Token
 from TokenType import TokenType
-
-
 import re
-
-
-
-# match = re.match(r'\/\*(.|\n)*?\*\/', self.source)
-#             if match:
-#                 self.source = self.source[match.end():]
-#                 continue
 
 
 Jesse = TypeVar('Jesse')
@@ -19,6 +10,9 @@ class Scanner:
     '''
     Scanner class for the Jesse programming language. 
     It makes use of regular expressions to match tokens.
+    
+    jesse: Jesse object
+    source: Source code of the Jesse program
     '''
     def __init__(self, jesse:Jesse, source: str):
         self.jesse = jesse
@@ -53,8 +47,6 @@ class Scanner:
             '>=': TokenType.GREATER_EQUAL,
         }
 
-
-
         self.reserved_keywords = {
             "and": TokenType.AND,
             "cartel": TokenType.CARTEL,
@@ -67,9 +59,9 @@ class Scanner:
             "say my name": TokenType.SAY_MY_NAME,
             "we are done when i say we are done": TokenType.WE_ARE_DONE_WHEN_I_SAY_WE_ARE_DONE,
         }
-        # Keywords that contain whitespace
+
+        # Keywords that contain whitespaces
         self.whitespace_keywords = {key:self.reserved_keywords[key] for key in self.reserved_keywords if re.match(r'.*\s.*', key)}
-        # Regex string to match all whitespace keywords
         self.matching_string = '|'.join(self.whitespace_keywords.keys())
 
     def scan_tokens(self) -> List[Token]:
@@ -141,9 +133,9 @@ class Scanner:
             # Match meth (numbers)
             match = re.match(r'\d+(.\d+)?', self.source)
             if match:
-                # Try to match lb,oz,gm after the number
+                # Try to match lb after the number
                 # Otherwise raise an error
-                match2 = re.match(r'lb|oz|gm', self.source[match.end():])
+                match2 = re.match(r'lb', self.source[match.end():])
                 if match2:
                     final_match = match.group()+match2.group()
                     pos = (self.line, self.column)
@@ -155,7 +147,7 @@ class Scanner:
                 else:
                     code = self.lines[self.line-1]
                     pos = (self.line, self.column+match.end()-1)
-                    self.jesse.error(code, pos, 'what do you mean yo? grams, ounces, or pounds?')
+                    self.jesse.error(code, pos, 'do you mean pounds?')
                     break
             # Match single character tokens
             match = re.match(r'[()\{\},\.\-+*/;]', self.source)
