@@ -1,6 +1,7 @@
 from typing import List, Tuple
 from Scanner import Scanner
 from Parser import Parser
+from AstPrinter import AstPrinter
 
 import sys
 
@@ -19,7 +20,7 @@ class Jesse:
         expr = parser.parse()
         if self.had_error:
             return
-        print(expr)
+        print(AstPrinter().print(expr))
 
     def run_file(self, path: str) -> None:
         f = open(path, 'r')

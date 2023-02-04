@@ -94,9 +94,10 @@ class Parser:
 
         if self.match(TokenType.LEFT_PAREN):
             expr = self.expression()
+            # TODO: Make this a better error message
             self.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.")
             return Grouping(expr)
-
+        # TODO: Make this a better error message
         raise self.error(self.peek(), "Expect expression.")
     
     def match(self, *types: TokenType) -> bool:
