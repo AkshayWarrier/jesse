@@ -3,7 +3,7 @@ from typing import List, TypeVar
 from Token import Token
 from TokenType import TokenType
 
-Jesse = TypeVar('Jesse')
+
 class ParseError(Exception):
     '''
     ParseError class for the Jesse programming language.
@@ -17,7 +17,7 @@ class Parser:
     jesse: Jesse object
     tokens: List of tokens to parse
     '''
-    def __init__(self, jesse:Jesse, source:str, tokens: List[Token]) -> None:
+    def __init__(self, jesse:object, source:str, tokens: List[Token]) -> None:
         self.jesse = jesse
         self.source = source
         self.lines = source.splitlines()

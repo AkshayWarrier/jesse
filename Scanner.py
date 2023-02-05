@@ -4,7 +4,6 @@ from TokenType import TokenType
 import re
 
 
-Jesse = TypeVar('Jesse')
 
 class Scanner:
     '''
@@ -14,7 +13,7 @@ class Scanner:
     jesse: Jesse object
     source: Source code of the Jesse program
     '''
-    def __init__(self, jesse:Jesse, source: str):
+    def __init__(self, jesse:object, source: str):
         self.jesse = jesse
         self.source = source
         self.lines = source.splitlines()
@@ -135,12 +134,12 @@ class Scanner:
             if match:
                 # Try to match gm after the number
                 # Otherwise raise an error
-                match2 = re.match(r'gm', self.source[match.end():])
-                if match2:
-                    final_match = match.group()+match2.group()
+                match_unit = re.match(r'gm', self.source[match.end():])
+                if match_unit:
+                    final_match = match.group()+match_unit.group()
                     pos = (self.line, self.column)
                     self.column += match.end() + 2
-                    self.add_token(TokenType.METH, final_match, final_match, pos)
+                    self.add_token(TokenType.METH, final_match, float(match.group()), pos)
                     self.source = self.source[match.end()+2:]
                     did_match = True
                     continue

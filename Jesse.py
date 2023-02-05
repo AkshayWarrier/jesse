@@ -2,6 +2,7 @@ from typing import List, Tuple
 from Scanner import Scanner
 from Parser import Parser
 from AstPrinter import AstPrinter
+from Interpreter import Interpreter
 
 import sys
 
@@ -11,6 +12,7 @@ class Jesse:
     '''
     def __init__(self):
         self.had_error = False
+        self.had_runtime_error = False
 
     def run(self, source: str) -> None:
         print("yeah mr white! yeah science!")
@@ -20,7 +22,8 @@ class Jesse:
         expr = parser.parse()
         if self.had_error:
             return
-        print(AstPrinter().print(expr))
+        interpreter = Interpreter(self)
+        interpreter.interpret(expr)
 
     def run_file(self, path: str) -> None:
         f = open(path, 'r')
@@ -29,6 +32,8 @@ class Jesse:
 
         if self.had_error:
             sys.exit(65)
+        if self.had_runtime_error:
+            sys.exit(70)
 
     def run_prompt(self) -> None:
         while True:
@@ -42,6 +47,10 @@ class Jesse:
 
     def error(self, code:str, pos: Tuple[int,int], message: str) -> None:
         self.report_error(code,pos, message)
+
+    def runtime_error(self, error: RuntimeError) -> None:
+        print(f'[Runtime Error] {error}')
+        self.had_runtime_error = True
 
     def report_error(self, code:str, pos: Tuple[int,int], message: str) -> None:
         print(code)
