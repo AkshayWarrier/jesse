@@ -69,7 +69,6 @@ class Interpreter:
         if isinstance(obj, float):
             return f"{obj:g}gm"
                 
-
         return str(obj)
 
     def visit_grouping_expr(self, expr: Grouping) -> Any:

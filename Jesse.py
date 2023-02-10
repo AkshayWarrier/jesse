@@ -18,10 +18,14 @@ class Jesse:
         print("yeah mr white! yeah science!")
         scanner = Scanner(self,source)
         tokens = scanner.scan_tokens()
+        # [print(token) for token in tokens]
+        if self.had_error:
+            return
         parser = Parser(self,source,tokens)
         expr = parser.parse()
         if self.had_error:
             return
+        # print(AstPrinter().print(expr))
         interpreter = Interpreter(self)
         interpreter.interpret(expr)
 

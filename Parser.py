@@ -1,5 +1,5 @@
 from Expr import *
-from typing import List, TypeVar
+from typing import List, Optional
 from Token import Token
 from TokenType import TokenType
 
@@ -84,34 +84,36 @@ class Parser:
     def primary(self) -> Expr:
         if self.match(TokenType.DEA):
             return Literal(False)
-        if self.match(TokenType.CARTEL):
+        elif self.match(TokenType.CARTEL):
             return Literal(True)
-        if self.match(TokenType.I_AM_THE_DANGER):
+        elif self.match(TokenType.I_AM_THE_DANGER):
             return Literal(None)
 
-        if self.match(TokenType.METH, TokenType.STRING):
+        elif self.match(TokenType.METH, TokenType.STRING):
             return Literal(self.previous().literal)
 
-        if self.match(TokenType.LEFT_PAREN):
+        elif self.match(TokenType.LEFT_PAREN):
+            matching_paren = self.previous()
             expr = self.expression()
-            # TODO: Make this a better error message
-            self.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.")
+            self.consume(TokenType.RIGHT_PAREN, "you haven't closed this yo",matching=matching_paren)
             return Grouping(expr)
-        # TODO: Make this a better error message
-        raise self.error(self.peek(), "Expect expression.")
+
+        raise self.error(self.peek(), "this ain't no expression yo")
     
     def match(self, *types: TokenType) -> bool:
-        # Try to match the current token with one of the types in the list
+        # Try to match the current token with one of the types in the list and consume it if it matches
         for token_type in types:
             if self.check(token_type):
                 self.advance()
                 return True
         return False
 
-    def consume(self, token_type: TokenType, message: str) -> Token:
+    def consume(self, token_type: TokenType, message: str, matching: Optional[Token] = None) -> Token:
         # Try to consume a token of a given token_type
         if self.check(token_type):
             return self.advance()
+        if matching:
+            raise self.error(matching, message)
         raise self.error(self.peek(), message)
 
     def check(self, token_type: TokenType) -> bool:

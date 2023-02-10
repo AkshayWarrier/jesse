@@ -120,7 +120,7 @@ class Scanner:
                 self.source = self.source[match.end():]
                 did_match = True
                 continue
-            # Match identifiers
+            # Match identifiers and keywords
             match = re.match(r'[a-zA-Z_][a-zA-Z_0-9]*',self.source)
             if match:
                 pos = (self.line, self.column)
