@@ -47,3 +47,8 @@ if __name__ == "__main__":
         "Literal  -> value: object",
         "Unary    -> operator: Token, right: Expr",
     ])
+
+    generator.define_ast("Stmt", [
+        "Expression -> expression: Expr",
+        "Print      -> expression: Expr",
+    ])

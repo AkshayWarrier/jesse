@@ -1,4 +1,13 @@
 ```python
+program        → statement* EOF ;
+
+statement      → exprStmt
+               | printStmt ;
+
+exprStmt       → expression ";" ;
+cookStmt      → "cook" expression ";" ;
+
+
 expression     → literal
                | unary
                | binary
