@@ -22,12 +22,9 @@ class Jesse:
         if self.had_error:
             return
         parser = Parser(self,source,tokens)
-        expr = parser.parse()
-        if self.had_error:
-            return
-        # print(AstPrinter().print(expr))
+        statements = parser.parse()
         interpreter = Interpreter(self)
-        interpreter.interpret(expr)
+        interpreter.interpret(statements)
 
     def run_file(self, path: str) -> None:
         f = open(path, 'r')
@@ -59,7 +56,7 @@ class Jesse:
     def report_error(self, code:str, pos: Tuple[int,int], message: str) -> None:
         print(code)
         print(" " * pos[1] + '^' + '-'*(len(code) - pos[1] - 1))
-        print(f'[Error {pos[0]}] but mr white {message}')
+        print(f'[Error {pos[0]}] mr white {message}')
         self.had_error = True
 
 

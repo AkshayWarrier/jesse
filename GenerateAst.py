@@ -8,11 +8,14 @@ class GenerateAst:
     base_name: The name of the base class
     types: A list of the types of the AST classes that inherit from the base class
     '''
-    def define_ast(self, base_name:str, types:List[str]):
+    def define_ast(self, base_name:str, types:List[str], extra_imports:List[str]=[]):
         path = f"{output_dir}/{base_name}.py"
         with open(path, 'w') as f:
             f.write("from typing import List\n")
             f.write("from Token import Token\n\n")
+            for import_ in extra_imports:
+                f.write(f"from {import_} import {import_}\n")
+            f.write("\n")
             f.write(f"class {base_name}:\n")
             f.write("    pass\n")
             for type in types:
@@ -50,5 +53,5 @@ if __name__ == "__main__":
 
     generator.define_ast("Stmt", [
         "Expression -> expression: Expr",
-        "Print      -> expression: Expr",
-    ])
+        "SayMyName      -> expression: Expr",
+    ], extra_imports=["Expr"])

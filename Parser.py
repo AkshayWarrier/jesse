@@ -1,4 +1,5 @@
 from Expr import *
+from Stmt import *
 from typing import List, Optional
 from Token import Token
 from TokenType import TokenType
@@ -24,14 +25,30 @@ class Parser:
         self.tokens = tokens
         self.current = 0
 
-    def parse(self) -> None:
-        try:
-            return self.expression()
-        except ParseError:
-            return None    
+    def parse(self) -> List[Stmt]:
+        statements = []
+        while not self.is_at_end():
+            statements.append(self.statement())
+        return statements
 
     def expression(self) -> Expr:
         return self.equality()
+
+    def statement(self) -> Stmt:
+        if self.match(TokenType.SAY_MY_NAME):
+            return self.saymyname_statement()
+
+        return self.expression_statement()
+
+    def saymyname_statement(self) -> Stmt:
+        value = self.expression()
+        self.consume(TokenType.SEMICOLON, "where's my semicolon b*tch?")
+        return SayMyName(value)
+
+    def expression_statement(self) -> Stmt:
+        expr = self.expression()
+        self.consume(TokenType.SEMICOLON, "where's my semicolon b*tch?")
+        return Expression(expr)
 
     def equality(self) -> Expr:
         expr = self.comparison()

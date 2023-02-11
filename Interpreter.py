@@ -1,3 +1,4 @@
+from Stmt import *
 from Expr import *
 from typing import Any
 from TokenType import TokenType
@@ -16,10 +17,10 @@ class Interpreter:
     def __init__(self, jesse) -> None:
         self.jesse = jesse
 
-    def interpret(self, expr: Expr) -> None:
+    def interpret(self, statements: List[Stmt]) -> None:
         try:
-            value = self.evaluate(expr)
-            print(self.stringify(value))
+            for statement in statements:
+                self.execute(statement)
         except JesseRuntimeError as error:
             self.jesse.runtime_error(error)
 
@@ -69,6 +70,9 @@ class Interpreter:
         if isinstance(obj, float):
             return f"{obj:g}gm"
                 
+        if isinstance(obj, str):
+            return obj
+        
         return str(obj)
 
     def visit_grouping_expr(self, expr: Grouping) -> Any:
@@ -76,6 +80,18 @@ class Interpreter:
 
     def evaluate(self, expr: Expr) -> Any:
         return expr.accept(self)
+
+    def execute(self, stmt: Stmt) -> None:
+        stmt.accept(self)
+
+    def visit_expression_stmt(self, stmt: Expression) -> None:
+        self.evaluate(stmt.expression)
+
+    def visit_saymyname_stmt(self, stmt: SayMyName) -> None:
+        value = self.evaluate(stmt.expression)
+        print(self.stringify(value))
+
+    
 
     def visit_binary_expr(self, expr: Binary) -> Any:
         left = self.evaluate(expr.left)
