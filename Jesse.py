@@ -23,7 +23,7 @@ class Jesse:
             return
         parser = Parser(self,source,tokens)
         statements = parser.parse()
-        interpreter = Interpreter(self)
+        interpreter = Interpreter(self,source)
         interpreter.interpret(statements)
 
     def run_file(self, path: str) -> None:
@@ -49,8 +49,10 @@ class Jesse:
     def error(self, code:str, pos: Tuple[int,int], message: str) -> None:
         self.report_error(code,pos, message)
 
-    def runtime_error(self, error: RuntimeError) -> None:
-        print(f'[Runtime Error] {error}')
+    def runtime_error(self, code:str, pos: Tuple[int,int], error: RuntimeError) -> None:
+        print(code)
+        print(" " * pos[1] + '^' + '-'*(len(code) - pos[1] - 1))
+        print(f'[Runtime Error {pos[0]}] mr white {error}')
         self.had_runtime_error = True
 
     def report_error(self, code:str, pos: Tuple[int,int], message: str) -> None:

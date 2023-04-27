@@ -130,13 +130,12 @@ class Scanner:
                 did_match = True
                 continue
             # Match meth (numbers)
-            match = re.match(r'\d+(.\d+)?', self.source)
+            match = re.match(r'\d+(\.\d+)?', self.source)
             if match:
                 # Try to match gm after the number
                 # Otherwise raise an error
-                match_unit = re.match(r'gm', self.source[match.end():])
-                if match_unit:
-                    final_match = match.group()+match_unit.group()
+                if self.source[match.end():match.end()+2] == 'gm':
+                    final_match = match.group()+"gm"
                     pos = (self.line, self.column)
                     self.column += match.end() + 2
                     self.add_token(TokenType.METH, final_match, float(match.group()), pos)

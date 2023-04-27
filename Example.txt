@@ -1,1 +1,1 @@
-say my name (1gm+2gm);
+say my name (1gm+"Heisenberg");

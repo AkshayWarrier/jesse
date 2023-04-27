@@ -1,12 +1,12 @@
 from Stmt import *
 from Expr import *
-from typing import Any
+from typing import Tuple,Any
 from TokenType import TokenType
 
 class JesseRuntimeError(RuntimeError):
-    def __init__(self, line: int, message: str) -> None:
+    def __init__(self, pos: Tuple[int], message: str) -> None:
         super().__init__(message)
-        self.line = line
+        self.pos = pos
 
 class Interpreter:
     '''
@@ -14,15 +14,20 @@ class Interpreter:
     It implements all the visitor methods for the AST nodes.
     '''
 
-    def __init__(self, jesse) -> None:
+    def __init__(self, jesse:object,source:str) -> None:
         self.jesse = jesse
+        self.source = source
+        self.lines = source.splitlines()
+
 
     def interpret(self, statements: List[Stmt]) -> None:
         try:
             for statement in statements:
                 self.execute(statement)
         except JesseRuntimeError as error:
-            self.jesse.runtime_error(error)
+            pos = error.pos
+            code = self.lines[pos[0] - 1]
+            self.jesse.runtime_error(code,pos,error)
 
     def visit_literal_expr(self, expr: Literal) -> Any:
         return expr.value
@@ -42,12 +47,12 @@ class Interpreter:
     def check_number_operand(self, operator: Token, operand: Any) -> None:
         if isinstance(operand, float):
             return
-        raise JesseRuntimeError(operator.pos[0], "Operand must be a number.")
+        raise JesseRuntimeError(operator.pos, "operands must be a numbers, its basic math yo")
 
     def check_number_operands(self, operator: Token, left: Any, right: Any) -> None:
         if isinstance(left, float) and isinstance(right, float):
             return
-        raise JesseRuntimeError(operator.pos[0], "Operands must be numbers.")
+        raise JesseRuntimeError(operator.pos, "operands must be numbers, its basic math yo")
 
     def is_truthy(self, obj: Any) -> bool:
         if obj is None:
@@ -111,7 +116,7 @@ class Interpreter:
                 return left + right
             if isinstance(left, str) and isinstance(right, str):
                 return left + right
-            raise JesseRuntimeError(expr.operator.pos[0], "Operands must be two numbers or two strings.")
+            raise JesseRuntimeError(expr.operator.pos, "operands must be two numbers or two strings yo")
         elif expr.operator.token_type == TokenType.GREATER:
             self.check_number_operands(expr.operator, left, right)
             return left > right
