@@ -1,12 +1,25 @@
 ```python
 program        → statement* EOF ;
 
+
 statement      → exprStmt
-               | printStmt ;
+               | printStmt
+               | block;
+block          → "{" declaration* "}" ;
+
+declaration    → varDecl
+               | statement ;
+
+varDecl        → "cook" IDENTIFIER ( "=" expression )? ";" ;
+
+
 
 exprStmt       → expression ";" ;
 cookStmt      → "cook" expression ";" ;
 
+expression     → assignment ;
+assignment     → IDENTIFIER "=" assignment
+               | equality ;
 
 expression     → literal
                | unary
@@ -28,5 +41,6 @@ factor         → unary ( ( "/" | "*" ) unary )* ;
 unary          → ( "!" | "-" ) unary
                | primary ;
 primary        → METH | STRING | "cartel" | "dea" | "i am the danger"
-               | "(" expression ")" ;
+               | "(" expression ")" 
+               | IDENTIFIER;
 ```

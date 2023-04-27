@@ -19,3 +19,11 @@ class SayMyName(Stmt):
 
     def accept(self, visitor):
         return visitor.visit_saymyname_stmt(self)
+
+class Cook(Stmt):
+    def __init__(self, name: Token, initializer: Expr) -> None:
+        self.name = name
+        self.initializer = initializer
+
+    def accept(self, visitor):
+        return visitor.visit_cook_stmt(self)

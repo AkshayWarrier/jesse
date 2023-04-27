@@ -28,11 +28,20 @@ class Parser:
     def parse(self) -> List[Stmt]:
         statements = []
         while not self.is_at_end():
-            statements.append(self.statement())
+            statements.append(self.declaration())
         return statements
 
     def expression(self) -> Expr:
-        return self.equality()
+        return self.assignment()
+
+    def declaration(self) -> Stmt:
+        try:
+            if self.match(TokenType.COOK):
+                return self.cook_declaration()
+            return self.statement()
+        except ParseError:
+            self.synchronize()
+            return None
 
     def statement(self) -> Stmt:
         if self.match(TokenType.SAY_MY_NAME):
@@ -45,10 +54,33 @@ class Parser:
         self.consume(TokenType.SEMICOLON, "where's my semicolon b*tch?")
         return SayMyName(value)
 
+    def cook_declaration(self) -> Stmt:
+        name = self.consume(TokenType.IDENTIFIER, "what's the name of your cook yo")
+        initializer: Expr = None;
+        if self.match(TokenType.EQUAL):
+            initializer = self.expression()
+        self.consume(TokenType.SEMICOLON, "where's my semicolon b*tch?")
+        return Cook(name, initializer) 
+
     def expression_statement(self) -> Stmt:
         expr = self.expression()
         self.consume(TokenType.SEMICOLON, "where's my semicolon b*tch?")
         return Expression(expr)
+
+    def assignment(self) -> Expr:
+        expr = self.equality()
+
+        if self.match(TokenType.EQUAL):
+            equals = self.previous()
+            value = self.assignment()
+
+            if isinstance(expr, Variable):
+                name = expr.name
+                return Assign(name, value)
+
+            self.error(equals, "this is an invalid assignment target yo")
+
+        return expr
 
     def equality(self) -> Expr:
         expr = self.comparison()
@@ -108,6 +140,9 @@ class Parser:
 
         elif self.match(TokenType.METH, TokenType.STRING):
             return Literal(self.previous().literal)
+
+        elif self.match(TokenType.IDENTIFIER):
+            return Variable(self.previous())
 
         elif self.match(TokenType.LEFT_PAREN):
             matching_paren = self.previous()

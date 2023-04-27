@@ -1,1 +1,4 @@
-say my name (1gm+"Heisenberg");
+cook a = 1gm;
+cook b = 2gm;
+b = 1gm;
+say my name a+b;

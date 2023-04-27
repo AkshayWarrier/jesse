@@ -45,13 +45,16 @@ if __name__ == "__main__":
     output_dir = args[0]
     generator = GenerateAst()
     generator.define_ast("Expr", [
+        "Assign   -> name: Token, value: Expr",
         "Binary   -> left: Expr, operator: Token, right: Expr",
         "Grouping -> expression: Expr",
         "Literal  -> value: object",
         "Unary    -> operator: Token, right: Expr",
+        "Variable -> name: Token"
     ])
 
     generator.define_ast("Stmt", [
         "Expression -> expression: Expr",
-        "SayMyName      -> expression: Expr",
+        "SayMyName  -> expression: Expr",
+        "Cook       -> name: Token, initializer: Expr",
     ], extra_imports=["Expr"])

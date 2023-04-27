@@ -3,10 +3,9 @@ from Expr import *
 from typing import Tuple,Any
 from TokenType import TokenType
 
-class JesseRuntimeError(RuntimeError):
-    def __init__(self, pos: Tuple[int], message: str) -> None:
-        super().__init__(message)
-        self.pos = pos
+from Environment import Environment
+from JesseRuntimeError import JesseRuntimeError
+
 
 class Interpreter:
     '''
@@ -16,6 +15,7 @@ class Interpreter:
 
     def __init__(self, jesse:object,source:str) -> None:
         self.jesse = jesse
+        self.environment = Environment()
         self.source = source
         self.lines = source.splitlines()
 
@@ -43,6 +43,9 @@ class Interpreter:
 
         # Unreachable.
         return None
+
+    def visit_variable_expr(self, expr: Expr) -> None:
+        return self.environment.get(expr.name)
 
     def check_number_operand(self, operator: Token, operand: Any) -> None:
         if isinstance(operand, float):
@@ -96,7 +99,16 @@ class Interpreter:
         value = self.evaluate(stmt.expression)
         print(self.stringify(value))
 
-    
+    def visit_cook_stmt(self, stmt: Cook) -> None:
+        value = None
+        if(stmt.initializer != None):
+            value = self.evaluate(stmt.initializer)
+        self.environment.define(stmt.name.lexeme,value)
+
+    def visit_assign_expr(self, stmt: Assign) -> Any:
+        value = self.evaluate(stmt.value)
+        self.environment.assign(stmt.name,value)
+        return value
 
     def visit_binary_expr(self, expr: Binary) -> Any:
         left = self.evaluate(expr.left)
