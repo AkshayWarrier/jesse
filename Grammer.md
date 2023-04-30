@@ -16,13 +16,13 @@ varDecl        → "cook" IDENTIFIER ( "=" expression )? ";"
 
 exprStmt       → expression ";" 
 cookStmt       → "cook" expression ";"
-ternary        → equality "?" equality ":" equality ";"
+
 
 expression     → assignment ";"
 assignment     → IDENTIFIER "=" assignment";"
-               | equality ";"
+               | ternary ";"
 
-
+ternary        → equality "?" equality ":" equality ";"
 
 equality       → comparison ( ( "!=" | "==" ) comparison )* ";"
 comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ";"
