@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import Tuple
 from Scanner import Scanner
 from Parser import Parser
 from Interpreter import Interpreter
@@ -15,13 +15,17 @@ class Jesse:
 
     def run(self, source: str) -> None:
         print("yeah mr white! yeah science!")
+
         scanner = Scanner(self,source)
         tokens = scanner.scan_tokens()
-        # [print(token) for token in tokens]
         if self.had_error:
             return
+
         parser = Parser(self,source,tokens)
         statements = parser.parse()
+        if self.had_error:
+            return
+            
         interpreter = Interpreter(self,source)
         interpreter.interpret(statements)
 

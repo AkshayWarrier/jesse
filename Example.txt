@@ -1,1 +1,1 @@
-cook a; 
+say my name "a" + 1gm;
