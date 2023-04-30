@@ -1,7 +1,6 @@
 from typing import List, Tuple
 from Scanner import Scanner
 from Parser import Parser
-from AstPrinter import AstPrinter
 from Interpreter import Interpreter
 
 import sys

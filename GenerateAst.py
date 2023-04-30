@@ -54,6 +54,7 @@ if __name__ == "__main__":
     ])
 
     generator.define_ast("Stmt", [
+        "Block      -> statements: List[Stmt]",
         "Expression -> expression: Expr",
         "SayMyName  -> expression: Expr",
         "Cook       -> name: Token, initializer: Expr",

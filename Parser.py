@@ -44,9 +44,12 @@ class Parser:
             return None
 
     def statement(self) -> Stmt:
+        # Check if its a recognized statement
         if self.match(TokenType.SAY_MY_NAME):
             return self.saymyname_statement()
-
+        if self.match(TokenType.LEFT_BRACE):
+            return Block(self.block())
+        # If not then it must be an expression statement
         return self.expression_statement()
 
     def saymyname_statement(self) -> Stmt:
@@ -56,7 +59,7 @@ class Parser:
 
     def cook_declaration(self) -> Stmt:
         name = self.consume(TokenType.IDENTIFIER, "what's the name of your cook yo")
-        initializer: Expr = None;
+        initializer: Expr = None
         if self.match(TokenType.EQUAL):
             initializer = self.expression()
         self.consume(TokenType.SEMICOLON, "where's my semicolon b*tch?")
@@ -66,6 +69,13 @@ class Parser:
         expr = self.expression()
         self.consume(TokenType.SEMICOLON, "where's my semicolon b*tch?")
         return Expression(expr)
+
+    def block(self) -> List[Stmt]:
+        statements = []
+        while not self.check(TokenType.RIGHT_BRACE) and not self.is_at_end():
+            statements.append(self.declaration())
+        self.consume(TokenType.RIGHT_BRACE, "where's my right brace b*tch?")
+        return statements
 
     def assignment(self) -> Expr:
         expr = self.equality()
