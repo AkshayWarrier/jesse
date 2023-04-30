@@ -46,6 +46,7 @@ if __name__ == "__main__":
     generator = GenerateAst()
     generator.define_ast("Expr", [
         "Assign   -> name: Token, value: Expr",
+        "Ternary  -> condition: Expr, then_branch: Expr, else_branch: Expr",
         "Binary   -> left: Expr, operator: Token, right: Expr",
         "Grouping -> expression: Expr",
         "Literal  -> value: object",

@@ -1,1 +1,3 @@
-say my name "a" + 1gm;
+cook a = 1gm;
+cook b = 2gm;
+say my name a > b ? "a is greater" : "b is greater";

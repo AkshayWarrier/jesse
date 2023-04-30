@@ -24,8 +24,7 @@ class Jesse:
         parser = Parser(self,source,tokens)
         statements = parser.parse()
         if self.had_error:
-            return
-            
+            return          
         interpreter = Interpreter(self,source)
         interpreter.interpret(statements)
 

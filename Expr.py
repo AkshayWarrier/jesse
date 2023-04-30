@@ -13,6 +13,15 @@ class Assign(Expr):
     def accept(self, visitor):
         return visitor.visit_assign_expr(self)
 
+class Ternary(Expr):
+    def __init__(self, condition: Expr, then_branch: Expr, else_branch: Expr) -> None:
+        self.condition = condition
+        self.then_branch = then_branch
+        self.else_branch = else_branch
+
+    def accept(self, visitor):
+        return visitor.visit_ternary_expr(self)
+
 class Binary(Expr):
     def __init__(self, left: Expr, operator: Token, right: Expr) -> None:
         self.left = left

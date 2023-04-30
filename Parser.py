@@ -78,7 +78,7 @@ class Parser:
         return statements
 
     def assignment(self) -> Expr:
-        expr = self.equality()
+        expr = self.ternary()
 
         if self.match(TokenType.EQUAL):
             equals = self.previous()
@@ -91,6 +91,17 @@ class Parser:
             self.error(equals, "this is an invalid assignment target yo")
 
         return expr
+
+    def ternary(self) -> Expr:
+        condition = self.equality()
+        if self.match(TokenType.QUESTION_MARK):
+            then_branch = self.equality()
+            if self.match(TokenType.COLON):
+                else_branch = self.equality()
+                return Ternary(condition,then_branch,else_branch)
+            else:
+                self.error(self.previous(),"this is an invalid ternary statement yo")
+        return condition
 
     def equality(self) -> Expr:
         expr = self.comparison()

@@ -117,10 +117,17 @@ class Interpreter:
             value = self.evaluate(stmt.initializer)
         self.environment.define(stmt.name.lexeme,value)
 
-    def visit_assign_expr(self, stmt: Assign) -> Any:
-        value = self.evaluate(stmt.value)
-        self.environment.assign(stmt.name,value)
+    def visit_assign_expr(self, expr: Assign) -> Any:
+        value = self.evaluate(expr.value)
+        self.environment.assign(expr.name,value)
         return value
+
+    def visit_ternary_expr(self, expr: Ternary) -> Any:
+        condition = self.evaluate(expr.condition)
+        if condition:
+            return self.evaluate(expr.then_branch)
+        else:
+            return self.evaluate(expr.else_branch)
 
     def visit_binary_expr(self, expr: Binary) -> Any:
         left = self.evaluate(expr.left)

@@ -37,6 +37,8 @@ class Scanner:
             '=': TokenType.EQUAL,
             '<': TokenType.LESS,
             '>': TokenType.GREATER,
+            '?': TokenType.QUESTION_MARK,
+            ':': TokenType.COLON,
         }
 
         self.double_char_to_token = {
@@ -148,7 +150,7 @@ class Scanner:
                     self.jesse.error(code, pos, "you haven't mentioned a unit of measurement for this number yo")
                     break
             # Match single character tokens
-            match = re.match(r'[()\{\},\.\-+*/;]', self.source)
+            match = re.match(r'[()\{\},\.\-+*/;?:]', self.source)
             if match:
                 pos = (self.line, self.column)
                 self.column += match.end()
