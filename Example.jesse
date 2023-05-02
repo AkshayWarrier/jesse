@@ -1,0 +1,5 @@
+cook a = cartel;
+cook b = dea;
+
+say my name a or b ? "yes" : "no";
+    

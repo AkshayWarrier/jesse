@@ -3,8 +3,12 @@ program        → statement* EOF ;
 
 
 statement      → exprStmt
+               | ifStmt
                | printStmt
                | block
+
+ifStmt         → "cook" "(" expression ")" statement ( "else" statement )?
+
 block          → "{" declaration* "}" 
 
 declaration    → varDecl
@@ -20,9 +24,13 @@ cookStmt       → "cook" expression ";"
 
 expression     → assignment ";"
 assignment     → IDENTIFIER "=" assignment";"
-               | ternary ";"
+               | logic_or ";"
 
-ternary        → equality "?" equality ":" equality ";"
+logic_or       → logic_and ( "or" logic_and )* ;
+logic_and      → ternary ( "and" ternary )* ;
+
+ternary        → equality
+               | equality "?" equality ":" equality ";"
 
 equality       → comparison ( ( "!=" | "==" ) comparison )* ";"
 comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ";"

@@ -20,6 +20,15 @@ class Expression(Stmt):
     def accept(self, visitor):
         return visitor.visit_expression_stmt(self)
 
+class JesseIf(Stmt):
+    def __init__(self, condition: Expr, then_branch: Stmt, else_branch: Stmt) -> None:
+        self.condition = condition
+        self.then_branch = then_branch
+        self.else_branch = else_branch
+
+    def accept(self, visitor):
+        return visitor.visit_jesseif_stmt(self)
+
 class SayMyName(Stmt):
     def __init__(self, expression: Expr) -> None:
         self.expression = expression

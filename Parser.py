@@ -45,12 +45,24 @@ class Parser:
 
     def statement(self) -> Stmt:
         # Check if its a recognized statement
+        if self.match(TokenType.JESSE_IF):
+            return self.jesseif_statement()
         if self.match(TokenType.SAY_MY_NAME):
             return self.saymyname_statement()
         if self.match(TokenType.LEFT_BRACE):
             return Block(self.block())
         # If not then it must be an expression statement
         return self.expression_statement()
+
+    def jesseif_statement(self) -> Stmt:
+        self.consume(TokenType.LEFT_PAREN, "where's my left paren b*tch?")
+        condition = self.expression()
+        self.consume(TokenType.RIGHT_PAREN, "where's my right paren b*tch?")
+        then_branch = self.statement()
+        else_branch: Stmt = None
+        if self.match(TokenType.ELSE):
+            else_branch = self.statement()
+        return JesseIf(condition, then_branch, else_branch)
 
     def saymyname_statement(self) -> Stmt:
         value = self.expression()
@@ -78,7 +90,7 @@ class Parser:
         return statements
 
     def assignment(self) -> Expr:
-        expr = self.ternary()
+        expr = self.logical_or()
 
         if self.match(TokenType.EQUAL):
             equals = self.previous()
@@ -92,6 +104,27 @@ class Parser:
 
         return expr
 
+    def logical_or(self) -> Expr:
+        expr = self.logical_and()
+
+        while self.match(TokenType.OR):
+            operator = self.previous()
+            right = self.logical_and()
+            expr = Logical(expr, operator, right)
+
+        return expr
+
+    def logical_and(self) -> Expr:
+        expr = self.ternary()
+
+        while self.match(TokenType.AND):
+            operator = self.previous()
+            right = self.ternary()
+            expr = Logical(expr, operator, right)
+
+        return expr
+    
+    # TODO: Add support for nested ternary expressions
     def ternary(self) -> Expr:
         condition = self.equality()
         if self.match(TokenType.QUESTION_MARK):

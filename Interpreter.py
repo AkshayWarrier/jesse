@@ -32,6 +32,18 @@ class Interpreter:
     def visit_literal_expr(self, expr: Literal) -> Any:
         return expr.value
 
+    def visit_logical_expr(self, expr: Logical) -> Any:
+        left = self.evaluate(expr.left)
+
+        if expr.operator.token_type == TokenType.OR:
+            if self.is_truthy(left):
+                return left
+        else:
+            if not self.is_truthy(left):
+                return left
+
+        return self.evaluate(expr.right)
+
     def visit_unary_expr(self, expr: Unary) -> Any:
         right = self.evaluate(expr.right)
 
@@ -58,7 +70,7 @@ class Interpreter:
         raise JesseRuntimeError(operator.pos, "operands must be numbers, its basic math yo")
 
     def is_truthy(self, obj: Any) -> bool:
-        if obj is None:
+        if obj is None or obj == 0:
             return False
         if isinstance(obj, bool):
             return obj
@@ -104,6 +116,12 @@ class Interpreter:
     def visit_block_stmt(self, stmt: Block) -> None:
         self.execute_block(stmt.statements, Environment(self.environment))
 
+    def visit_jesseif_stmt(self, stmt: JesseIf) -> None:
+        if self.is_truthy(self.evaluate(stmt.condition)):
+            self.execute(stmt.then_branch)
+        elif stmt.else_branch is not None:
+            self.execute(stmt.else_branch)
+
     def visit_expression_stmt(self, stmt: Expression) -> None:
         self.evaluate(stmt.expression)
 
@@ -124,7 +142,7 @@ class Interpreter:
 
     def visit_ternary_expr(self, expr: Ternary) -> Any:
         condition = self.evaluate(expr.condition)
-        if condition:
+        if self.is_truthy(condition):
             return self.evaluate(expr.then_branch)
         else:
             return self.evaluate(expr.else_branch)
