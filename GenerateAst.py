@@ -61,4 +61,5 @@ if __name__ == "__main__":
         "JesseIf    -> condition: Expr, then_branch: Stmt, else_branch: Stmt",
         "SayMyName  -> expression: Expr",
         "Cook       -> name: Token, initializer: Expr",
+        "TheOneWhoKnocks -> condition: Expr, body: Stmt",
     ], extra_imports=["Expr"])

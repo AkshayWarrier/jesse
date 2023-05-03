@@ -45,6 +45,8 @@ class Parser:
 
     def statement(self) -> Stmt:
         # Check if its a recognized statement
+        if self.match(TokenType.THE_ONE_WHO_KNOCKS):
+            return self.theonewhoknocks_statement()
         if self.match(TokenType.JESSE_IF):
             return self.jesseif_statement()
         if self.match(TokenType.SAY_MY_NAME):
@@ -53,6 +55,13 @@ class Parser:
             return Block(self.block())
         # If not then it must be an expression statement
         return self.expression_statement()
+
+    def theonewhoknocks_statement(self) -> Stmt:
+        self.consume(TokenType.LEFT_PAREN, "where's my left paren b*tch?")
+        condition = self.expression()
+        self.consume(TokenType.RIGHT_PAREN, "where's my right paren b*tch?")
+        body = self.statement()
+        return TheOneWhoKnocks(condition, body)
 
     def jesseif_statement(self) -> Stmt:
         self.consume(TokenType.LEFT_PAREN, "where's my left paren b*tch?")

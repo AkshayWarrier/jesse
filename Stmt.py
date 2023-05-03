@@ -43,3 +43,11 @@ class Cook(Stmt):
 
     def accept(self, visitor):
         return visitor.visit_cook_stmt(self)
+
+class TheOneWhoKnocks(Stmt):
+    def __init__(self, condition: Expr, body: Stmt) -> None:
+        self.condition = condition
+        self.body = body
+
+    def accept(self, visitor):
+        return visitor.visit_theonewhoknocks_stmt(self)

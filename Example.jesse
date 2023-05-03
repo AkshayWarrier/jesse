@@ -1,5 +1,9 @@
-cook a = cartel;
-cook b = dea;
+cook fact = 1gm;
+cook n = 5gm;
 
-say my name a or b ? "yes" : "no";
-    
+the one who knocks (n) {
+    fact = fact*n;
+    n = n-1gm;
+}
+
+say my name (fact);

@@ -47,5 +47,5 @@ class TokenType(Enum):
     # THIS = auto()
     CARTEL = auto() # True value
     COOK = auto() # Variable declaration
-    WE_ARE_DONE_WHEN_I_SAY_WE_ARE_DONE = auto() # While loop
+    THE_ONE_WHO_KNOCKS = auto() # While loop
     EOF = auto()

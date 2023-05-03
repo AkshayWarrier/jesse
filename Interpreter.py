@@ -135,6 +135,12 @@ class Interpreter:
             value = self.evaluate(stmt.initializer)
         self.environment.define(stmt.name.lexeme,value)
 
+    def visit_theonewhoknocks_stmt(self, stmt: TheOneWhoKnocks) -> None:
+        while self.is_truthy(self.evaluate(stmt.condition)):
+            self.execute(stmt.body)
+
+        return None
+
     def visit_assign_expr(self, expr: Assign) -> Any:
         value = self.evaluate(expr.value)
         self.environment.assign(expr.name,value)

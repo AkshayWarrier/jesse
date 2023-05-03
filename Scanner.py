@@ -58,7 +58,7 @@ class Scanner:
             "jesse if": TokenType.JESSE_IF,
             "or" : TokenType.OR,
             "say my name": TokenType.SAY_MY_NAME,
-            "we are done when i say we are done": TokenType.WE_ARE_DONE_WHEN_I_SAY_WE_ARE_DONE,
+            "the one who knocks": TokenType.THE_ONE_WHO_KNOCKS,
         }
 
         # Keywords that contain whitespaces

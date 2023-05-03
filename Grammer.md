@@ -5,7 +5,10 @@ program        → statement* EOF ;
 statement      → exprStmt
                | ifStmt
                | printStmt
+               | whileStmt
                | block
+
+whileStmt      → "the one who knocks" "(" expression ")" statement ";"
 
 ifStmt         → "cook" "(" expression ")" statement ( "else" statement )?
 
