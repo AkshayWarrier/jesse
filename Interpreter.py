@@ -1,11 +1,14 @@
 from Stmt import *
 from Expr import *
-from typing import Tuple,Any
+from typing import Any
 from TokenType import TokenType
 
 from Environment import Environment
+from JesseCallable import JesseCallable
 from JesseRuntimeError import JesseRuntimeError
-
+from JesseFunction import JesseFunction
+from Clock import Clock
+from ReturnException import ReturnException
 
 class Interpreter:
     '''
@@ -15,9 +18,12 @@ class Interpreter:
 
     def __init__(self, jesse:object,source:str) -> None:
         self.jesse = jesse
-        self.environment = Environment()
+        self.globals = Environment()
+        self.environment = self.globals
         self.source = source
         self.lines = source.splitlines()
+
+        self.globals.define("clock", Clock())
 
 
     def interpret(self, statements: List[Stmt]) -> None:
@@ -125,9 +131,21 @@ class Interpreter:
     def visit_expression_stmt(self, stmt: Expression) -> None:
         self.evaluate(stmt.expression)
 
+    def visit_bettercall_stmt(self, stmt: BetterCall) -> None:
+        function = JesseFunction(stmt)
+        self.environment.define(stmt.name.lexeme, function)
+        return None
+
     def visit_saymyname_stmt(self, stmt: SayMyName) -> None:
         value = self.evaluate(stmt.expression)
         print(self.stringify(value))
+
+    def visit_return_stmt(self, stmt: Return) -> None:
+        value = None
+        if stmt.value != None:
+            value = self.evaluate(stmt.value)
+
+        raise ReturnException(value)
 
     def visit_cook_stmt(self, stmt: Cook) -> None:
         value = None
@@ -188,3 +206,19 @@ class Interpreter:
             return not self.is_equal(left, right)
         elif expr.operator.token_type == TokenType.EQUAL_EQUAL:
             return self.is_equal(left, right)
+
+    def visit_call_expr(self,expr: Call) -> Any:
+        # Evaluate the callee, usually an identifier
+        callee = self.evaluate(expr.callee)
+        arguments = []
+        # Evaluate the arguments which can also be identifiers or literals
+        for argument in expr.arguments:
+            arguments.append(self.evaluate(argument))
+        # Check if the callee is a JesseCallable object
+        if not isinstance(callee, JesseCallable):
+            raise JesseRuntimeError(expr.paren.pos,"you can only call functions and classes yo")
+
+        # Check arity of the function
+        if len(arguments) != callee.arity():
+            raise JesseRuntimeError(expr.paren.pos,f"expected {function.arity()} arguments but got {len(arguments)} yo")
+        return callee.call(self,arguments)

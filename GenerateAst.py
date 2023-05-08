@@ -48,6 +48,7 @@ if __name__ == "__main__":
         "Assign   -> name: Token, value: Expr",
         "Ternary  -> condition: Expr, then_branch: Expr, else_branch: Expr",
         "Binary   -> left: Expr, operator: Token, right: Expr",
+        "Call     -> callee: Expr, paren: Token, arguments: List[Expr]",
         "Grouping -> expression: Expr",
         "Literal  -> value: object",
         "Logical  -> left: Expr, operator: Token, right: Expr",
@@ -58,8 +59,10 @@ if __name__ == "__main__":
     generator.define_ast("Stmt", [
         "Block      -> statements: List[Stmt]",
         "Expression -> expression: Expr",
+        "BetterCall   -> name: Token, params: List[Token], body: List[Stmt]",
         "JesseIf    -> condition: Expr, then_branch: Stmt, else_branch: Stmt",
         "SayMyName  -> expression: Expr",
+        "Return     -> keyword: Token, value: Expr",
         "Cook       -> name: Token, initializer: Expr",
         "TheOneWhoKnocks -> condition: Expr, body: Stmt",
     ], extra_imports=["Expr"])

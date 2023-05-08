@@ -33,16 +33,17 @@ class TokenType(Enum):
 
     # Keywords
     AND = auto()
+    BETTER_CALL = auto() # Function
     # CLASS = auto()
     ELSE = auto()
     DEA = auto() # False value
-    # FUN = auto()
-    # THE_ONE_WHO_KNOCKS = auto() # For loop
     JESSE_IF = auto() # If statement
+    #TODO: Add else if statement
+    JESSE_OTHERWISE = auto() # Else if statement
     I_AM_THE_DANGER = auto() # Null value
     OR = auto()
     SAY_MY_NAME = auto() # Print statement
-    # RETURN = auto()
+    RETURN = auto()
     # SUPER = auto()
     # THIS = auto()
     CARTEL = auto() # True value

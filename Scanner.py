@@ -59,6 +59,8 @@ class Scanner:
             "or" : TokenType.OR,
             "say my name": TokenType.SAY_MY_NAME,
             "the one who knocks": TokenType.THE_ONE_WHO_KNOCKS,
+            "better call": TokenType.BETTER_CALL,
+            "return": TokenType.RETURN,
         }
 
         # Keywords that contain whitespaces

@@ -1,9 +1,18 @@
-cook fact = 1gm;
-cook n = 5gm;
-
-the one who knocks (n) {
-    fact = fact*n;
-    n = n-1gm;
+better call fib(n) {
+  jesse if (n <= 1gm) {
+    return n;
+  }else{
+    return fib(n-1gm) + fib(n-2gm);
+  }
 }
 
-say my name (fact);
+better call fact(n) {
+    jesse if(n == 1gm) {
+      return 1gm;
+    }else{
+      return n*fact(n-1gm);
+    }
+}
+
+say my name fact(12gm);
+

@@ -1,21 +1,30 @@
-```python
+```java
 program        → statement* EOF ;
 
 
 statement      → exprStmt
                | ifStmt
                | printStmt
+               | returnStmt
                | whileStmt
                | block
 
+returnStmt     → "return" expression? ";"
+
 whileStmt      → "the one who knocks" "(" expression ")" statement ";"
 
-ifStmt         → "cook" "(" expression ")" statement ( "else" statement )?
+ifStmt         → "jesse if" "(" expression ")" statement 
+                 ( "else"statement )?
 
 block          → "{" declaration* "}" 
 
-declaration    → varDecl
+declaration    → funDecl
+               | varDecl
                | statement 
+
+funDecl        → "better call " function;
+function       → IDENTIFIER "(" parameters? ")" block
+parameters     → IDENTIFIER ( "," IDENTIFIER )* ";"
 
 varDecl        → "cook" IDENTIFIER ( "=" expression )? ";" 
 
@@ -39,8 +48,11 @@ equality       → comparison ( ( "!=" | "==" ) comparison )* ";"
 comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ";"
 term           → factor ( ( "-" | "+" ) factor )* ";"
 factor         → unary ( ( "/" | "*" ) unary )* ";"
-unary          → ( "!" | "-" ) unary";"
-               | primary ";"
+unary          → ( "!" | "-" ) unary | call ";"
+
+call           → primary ( "(" arguments? ")" )* ";"
+arguments      → expression ( "," expression )* ;
+
 primary        → METH | STRING | "cartel" | "dea" | "i am the danger"
                | "(" expression ")" 
                | IDENTIFIER;

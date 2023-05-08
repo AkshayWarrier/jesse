@@ -20,6 +20,15 @@ class Expression(Stmt):
     def accept(self, visitor):
         return visitor.visit_expression_stmt(self)
 
+class BetterCall(Stmt):
+    def __init__(self, name: Token, params: List[Token], body: List[Stmt]) -> None:
+        self.name = name
+        self.params = params
+        self.body = body
+
+    def accept(self, visitor):
+        return visitor.visit_bettercall_stmt(self)
+
 class JesseIf(Stmt):
     def __init__(self, condition: Expr, then_branch: Stmt, else_branch: Stmt) -> None:
         self.condition = condition
@@ -35,6 +44,14 @@ class SayMyName(Stmt):
 
     def accept(self, visitor):
         return visitor.visit_saymyname_stmt(self)
+
+class Return(Stmt):
+    def __init__(self, keyword: Token, value: Expr) -> None:
+        self.keyword = keyword
+        self.value = value
+
+    def accept(self, visitor):
+        return visitor.visit_return_stmt(self)
 
 class Cook(Stmt):
     def __init__(self, name: Token, initializer: Expr) -> None:

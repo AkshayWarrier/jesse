@@ -38,6 +38,8 @@ class Parser:
         try:
             if self.match(TokenType.COOK):
                 return self.cook_declaration()
+            if self.match(TokenType.BETTER_CALL):
+                return self.bettercall_declaration("function")
             return self.statement()
         except ParseError:
             self.synchronize()
@@ -45,6 +47,8 @@ class Parser:
 
     def statement(self) -> Stmt:
         # Check if its a recognized statement
+        if self.match(TokenType.RETURN):
+            return self.return_statement()
         if self.match(TokenType.THE_ONE_WHO_KNOCKS):
             return self.theonewhoknocks_statement()
         if self.match(TokenType.JESSE_IF):
@@ -78,6 +82,15 @@ class Parser:
         self.consume(TokenType.SEMICOLON, "where's my semicolon b*tch?")
         return SayMyName(value)
 
+    def return_statement(self) -> Stmt:
+        keyword = self.previous()
+        value: Expr = None
+        if not self.check(TokenType.SEMICOLON):
+            value = self.expression()
+        self.consume(TokenType.SEMICOLON, "where's my semicolon b*tch?")
+        
+        return Return(keyword, value)
+
     def cook_declaration(self) -> Stmt:
         name = self.consume(TokenType.IDENTIFIER, "what's the name of your cook yo")
         initializer: Expr = None
@@ -90,6 +103,20 @@ class Parser:
         expr = self.expression()
         self.consume(TokenType.SEMICOLON, "where's my semicolon b*tch?")
         return Expression(expr)
+
+    def bettercall_declaration(self, kind: str) -> Stmt:
+        name = self.consume(TokenType.IDENTIFIER, "what's the name of your function yo")
+        self.consume(TokenType.LEFT_PAREN, "where's my left paren b*tch?")
+        parameters = []
+        if not self.check(TokenType.RIGHT_PAREN):
+            while True:
+                parameters.append(self.consume(TokenType.IDENTIFIER, "what's the name of your parameter yo"))
+                if not self.match(TokenType.COMMA):
+                    break
+        self.consume(TokenType.RIGHT_PAREN, "where's my right paren b*tch?")
+        self.consume(TokenType.LEFT_BRACE, "where's my left brace b*tch?")
+        body = self.block()
+        return BetterCall(name, parameters, body)
 
     def block(self) -> List[Stmt]:
         statements = []
@@ -191,7 +218,25 @@ class Parser:
             right = self.unary()
             return Unary(operator, right)
 
-        return self.primary()
+        return self.call()
+
+    def call(self) -> Expr:
+        expr = self.primary()
+        while True:
+            if self.match(TokenType.LEFT_PAREN):
+                expr = self.finish_call(expr)
+            else:
+                break
+        return expr
+
+    def finish_call(self, callee: Expr) -> Call:
+        arguments = []
+        if not self.check(TokenType.RIGHT_PAREN):
+            arguments.append(self.expression())
+            while self.match(TokenType.COMMA):
+                arguments.append(self.expression())
+        paren = self.consume(TokenType.RIGHT_PAREN, "where's my right paren b*tch?")
+        return Call(callee, paren, arguments)
 
     def primary(self) -> Expr:
         if self.match(TokenType.DEA):
@@ -274,7 +319,8 @@ class Parser:
                 TokenType.COOK,
                 TokenType.JESSE_IF,
                 TokenType.SAY_MY_NAME,
-                TokenType.WE_ARE_DONE_WHEN_I_SAY_WE_ARE_DONE,
+                TokenType.THE_ONE_WHO_KNOCKS,
+                TokenType.BETTER_CALL,
             ):
                 return
 
