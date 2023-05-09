@@ -132,7 +132,7 @@ class Interpreter:
         self.evaluate(stmt.expression)
 
     def visit_bettercall_stmt(self, stmt: BetterCall) -> None:
-        function = JesseFunction(stmt)
+        function = JesseFunction(stmt,self.environment)
         self.environment.define(stmt.name.lexeme, function)
         return None
 

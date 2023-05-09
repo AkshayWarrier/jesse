@@ -1,18 +1,14 @@
-better call fib(n) {
-  jesse if (n <= 1gm) {
-    return n;
-  }else{
-    return fib(n-1gm) + fib(n-2gm);
+better call makeCounter() {
+  cook i = 0gm;
+  better call count() {
+    i = i + 1gm;
+    say my name i;
   }
+
+  return count;
 }
 
-better call fact(n) {
-    jesse if(n == 1gm) {
-      return 1gm;
-    }else{
-      return n*fact(n-1gm);
-    }
-}
-
-say my name fact(12gm);
-
+cook counter = makeCounter();
+counter();
+counter();
+counter();

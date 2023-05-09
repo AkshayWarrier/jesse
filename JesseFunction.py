@@ -3,14 +3,15 @@ from Environment import Environment
 from ReturnException import ReturnException
 
 class JesseFunction(JesseCallable):
-    def __init__(self, declaration):
+    def __init__(self, declaration, closure):
         self.declaration = declaration
+        self.closure = closure
 
     def arity(self):
         return len(self.declaration.params)
 
     def call(self,interpreter,arguments):
-        environment = Environment(interpreter.globals)
+        environment = Environment(self.closure)
 
         for i in range(len(self.declaration.params)):
             environment.define(self.declaration.params[i].lexeme,arguments[i])
