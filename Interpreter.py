@@ -106,7 +106,7 @@ class Interpreter:
             return f"{obj:g}gm"
                 
         if isinstance(obj, str):
-            return obj
+            return obj.strip('"')
         
         return str(obj)
 
