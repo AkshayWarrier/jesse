@@ -2,6 +2,7 @@ from typing import Tuple
 from Scanner import Scanner
 from Parser import Parser
 from Interpreter import Interpreter
+from Resolver import Resolver
 
 import sys
 
@@ -24,8 +25,11 @@ class Jesse:
         parser = Parser(self,source,tokens)
         statements = parser.parse()
         if self.had_error:
-            return          
+            return
         interpreter = Interpreter(self,source)
+        resolver = Resolver(self,source,interpreter)
+        
+        resolver.resolve(statements)
         interpreter.interpret(statements)
 
     def run_file(self, path: str) -> None:
@@ -49,7 +53,7 @@ class Jesse:
             self.had_error = False
 
     def error(self, code:str, pos: Tuple[int,int], message: str) -> None:
-        self.report_error(code,pos, message)
+        self.report_error(code,pos,message)
 
     def runtime_error(self, code:str, pos: Tuple[int,int], error: RuntimeError) -> None:
         print(code)

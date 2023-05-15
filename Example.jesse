@@ -1,14 +1,10 @@
-better call makeCounter() {
-  cook i = 0gm;
-  better call count() {
-    i = i + 1gm;
-    say my name i;
+cook a = "global";
+{
+  better call showA() {
+    say my name a;
   }
 
-  return count;
+  showA();
+  cook a = "block";
+  showA();
 }
-
-cook counter = makeCounter();
-counter();
-counter();
-counter();
