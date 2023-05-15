@@ -3,7 +3,11 @@ from Expr import *
 from typing import List
 
 from Interpreter import Interpreter
+from enum import Enum, auto
 
+class FunctionType(Enum):
+    NONE = auto()
+    FUNCTION = auto()
 
 class Resolver():
     def __init__(self,jesse,source,interpreter):
@@ -11,18 +15,22 @@ class Resolver():
         self.lines = source.splitlines()
         self.interpreter = interpreter
         self.scopes:List[bool] = []
+        self.current_function = FunctionType.NONE
 
     def resolve(self,statements:List[Stmt]):
         for statement in statements:
             self.resolve_stmt(statement)
 
-    def resolve_function(self,function:BetterCall):
+    def resolve_function(self,function:BetterCall,ftype:FunctionType):
+        enclosing_function = self.current_function
+        self.current_function = ftype
         self.begin_scope()
         for param in function.params:
             self.declare(param)
             self.define(param)
         self.resolve(function.body)
         self.end_scope()
+        self.current_function = enclosing_function
 
     def resolve_stmt(self,stmt:Stmt):
         stmt.accept(self)
@@ -41,6 +49,10 @@ class Resolver():
             return
         # Get the innermost/current scope
         scope = self.scopes[-1]
+        if name.lexeme in scope:
+            pos = name.pos
+            code = self.lines[pos[0] - 1]
+            self.jesse.error(code,pos,"variable with this name already declared in this scope yo")
         # The variable has been declared but not initialized hence False
         scope[name.lexeme] = False
 
@@ -73,6 +85,10 @@ class Resolver():
         self.resolve_expr(stmt.expression)
 
     def visit_return_stmt(self,stmt:Return):
+        if self.current_function == FunctionType.NONE:
+            pos = stmt.keyword.pos
+            code = self.lines[pos[0] - 1]
+            self.jesse.error(code,pos,"you cannot return from top-level code yo")
         if stmt.value is not None:
             self.resolve_expr(stmt.value)
 
@@ -83,7 +99,7 @@ class Resolver():
     def visit_bettercall_stmt(self,stmt:BetterCall):
         self.declare(stmt.name)
         self.define(stmt.name)
-        self.resolve_function(stmt)
+        self.resolve_function(stmt, FunctionType.NONE)
 
     def visit_cook_stmt(self,stmt:Cook):
         self.declare(stmt.name)
@@ -128,7 +144,6 @@ class Resolver():
     def visit_unary_expr(self,expr:Unary):
         self.resolve_expr(expr.right)
 
-    
 
 
     

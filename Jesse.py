@@ -28,8 +28,9 @@ class Jesse:
             return
         interpreter = Interpreter(self,source)
         resolver = Resolver(self,source,interpreter)
-        
         resolver.resolve(statements)
+        if self.had_error:
+            return
         interpreter.interpret(statements)
 
     def run_file(self, path: str) -> None:

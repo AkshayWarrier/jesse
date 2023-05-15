@@ -1,10 +1,1 @@
-cook a = "global";
-{
-  better call showA() {
-    say my name a;
-  }
-
-  showA();
-  cook a = "block";
-  showA();
-}
+cook a;
