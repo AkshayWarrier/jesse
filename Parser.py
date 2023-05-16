@@ -61,16 +61,16 @@ class Parser:
         return self.expression_statement()
 
     def theonewhoknocks_statement(self) -> Stmt:
-        self.consume(TokenType.LEFT_PAREN, "where's my left paren b*tch?")
+        self.consume(TokenType.LEFT_PAREN, "where's my left paren yo?")
         condition = self.expression()
-        self.consume(TokenType.RIGHT_PAREN, "where's my right paren b*tch?")
+        self.consume(TokenType.RIGHT_PAREN, "where's my right paren yo?")
         body = self.statement()
         return TheOneWhoKnocks(condition, body)
 
     def jesseif_statement(self) -> Stmt:
-        self.consume(TokenType.LEFT_PAREN, "where's my left paren b*tch?")
+        self.consume(TokenType.LEFT_PAREN, "where's my left paren yo?")
         condition = self.expression()
-        self.consume(TokenType.RIGHT_PAREN, "where's my right paren b*tch?")
+        self.consume(TokenType.RIGHT_PAREN, "where's my right paren yo?")
         then_branch = self.statement()
         else_branch: Stmt = None
         if self.match(TokenType.ELSE):
@@ -79,7 +79,7 @@ class Parser:
 
     def saymyname_statement(self) -> Stmt:
         value = self.expression()
-        self.consume(TokenType.SEMICOLON, "where's my semicolon b*tch?")
+        self.consume(TokenType.SEMICOLON, "where's my semicolon yo?")
         return SayMyName(value)
 
     def return_statement(self) -> Stmt:
@@ -87,7 +87,7 @@ class Parser:
         value: Expr = None
         if not self.check(TokenType.SEMICOLON):
             value = self.expression()
-        self.consume(TokenType.SEMICOLON, "where's my semicolon b*tch?")
+        self.consume(TokenType.SEMICOLON, "where's my semicolon yo?")
         
         return Return(keyword, value)
 
@@ -96,25 +96,25 @@ class Parser:
         initializer: Expr = None
         if self.match(TokenType.EQUAL):
             initializer = self.expression()
-        self.consume(TokenType.SEMICOLON, "where's my semicolon b*tch?")
+        self.consume(TokenType.SEMICOLON, "where's my semicolon yo?")
         return Cook(name, initializer) 
 
     def expression_statement(self) -> Stmt:
         expr = self.expression()
-        self.consume(TokenType.SEMICOLON, "where's my semicolon b*tch?")
+        self.consume(TokenType.SEMICOLON, "where's my semicolon yo?")
         return Expression(expr)
 
     def bettercall_declaration(self, kind: str) -> Stmt:
         name = self.consume(TokenType.IDENTIFIER, "what's the name of your function yo")
-        self.consume(TokenType.LEFT_PAREN, "where's my left paren b*tch?")
+        self.consume(TokenType.LEFT_PAREN, "where's my left paren yo?")
         parameters = []
         if not self.check(TokenType.RIGHT_PAREN):
             while True:
                 parameters.append(self.consume(TokenType.IDENTIFIER, "what's the name of your parameter yo"))
                 if not self.match(TokenType.COMMA):
                     break
-        self.consume(TokenType.RIGHT_PAREN, "where's my right paren b*tch?")
-        self.consume(TokenType.LEFT_BRACE, "where's my left brace b*tch?")
+        self.consume(TokenType.RIGHT_PAREN, "where's my right paren yo?")
+        self.consume(TokenType.LEFT_BRACE, "where's my left brace yo?")
         body = self.block()
         return BetterCall(name, parameters, body)
 
@@ -122,7 +122,7 @@ class Parser:
         statements = []
         while not self.check(TokenType.RIGHT_BRACE) and not self.is_at_end():
             statements.append(self.declaration())
-        self.consume(TokenType.RIGHT_BRACE, "where's my right brace b*tch?")
+        self.consume(TokenType.RIGHT_BRACE, "where's my right brace yo?")
         return statements
 
     def assignment(self) -> Expr:
@@ -235,7 +235,7 @@ class Parser:
             arguments.append(self.expression())
             while self.match(TokenType.COMMA):
                 arguments.append(self.expression())
-        paren = self.consume(TokenType.RIGHT_PAREN, "where's my right paren b*tch?")
+        paren = self.consume(TokenType.RIGHT_PAREN, "where's my right paren yo?")
         return Call(callee, paren, arguments)
 
     def primary(self) -> Expr:
