@@ -126,6 +126,11 @@ class Resolver():
         self.resolve_expr(expr.left)
         self.resolve_expr(expr.right)
 
+    def visit_ternary_expr(self,expr:Ternary):
+        self.resolve_expr(expr.condition)
+        self.resolve_expr(expr.then_branch)
+        self.resolve_expr(expr.else_branch)
+
     def visit_call_expr(self,expr:Call):
         self.resolve_expr(expr.callee)
         for arg in expr.arguments:

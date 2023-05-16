@@ -1,1 +1,4 @@
-say my name "heisenberg"
+cook my_meth = 5gm;
+
+say my name (my_meth > 5gm) ? "More than 5gm of meth" 
+                            : "Less than 5gm of meth";
