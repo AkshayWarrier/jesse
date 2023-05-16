@@ -99,7 +99,7 @@ class Resolver():
     def visit_bettercall_stmt(self,stmt:BetterCall):
         self.declare(stmt.name)
         self.define(stmt.name)
-        self.resolve_function(stmt, FunctionType.NONE)
+        self.resolve_function(stmt, FunctionType.FUNCTION)
 
     def visit_cook_stmt(self,stmt:Cook):
         self.declare(stmt.name)

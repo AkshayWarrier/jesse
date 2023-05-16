@@ -1,4 +1,9 @@
-cook my_meth = 5gm;
+better call make_counter() {
+  cook i = 0gm;
+  better call count() {
+    i = i + 1gm;
+    say my name i;
+  }
 
-say my name (my_meth > 5gm) ? "More than 5gm of meth" 
-                            : "Less than 5gm of meth";
+  return count;
+}
