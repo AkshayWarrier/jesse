@@ -2,9 +2,9 @@
 A programming language for meth heads
 
 ## Description
-You love programming. You love Breaking Bad. You will love jesse.
+Do you love programming? Are you a Breaking Bad fan? You will love jesse.
 
-jesse is an adaptation of the Lox programming language from the book Crafting Interpreters. jesse is almost identical to Lox in structure but makes use of Breaking Bad references as keywords and is implemented in Python.
+jesse is an adaptation of the Lox programming language from the book [Crafting Interpreters](http://www.craftinginterpreters.com/). jesse is almost identical to Lox in structure but makes use of Breaking Bad references as keywords and is implemented in Python.
 
 ## Installation
 - Clone the repo
