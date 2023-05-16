@@ -1,0 +1,15 @@
+#!bin/usr/env python3
+
+import sys
+from Jesse import Jesse
+
+if __name__ == '__main__':
+    # Get the command line arguments
+    args = sys.argv[1:]
+    if len(args) == 0:
+        Jesse().run_prompt()
+    elif len(args) > 1:
+        print('Usage: jesse [script]')
+        sys.exit(64)
+    elif len(args) == 1:
+        Jesse().run_file(args[0])
