@@ -69,6 +69,7 @@ class Interpreter:
 
     def look_up_variable(self, name: Token, expr: Expr) -> Any:
         distance = self.locals.get(expr)
+        print(self.locals)
         if distance is not None:
             return self.environment.get_at(distance, name.lexeme)
         else:
@@ -236,5 +237,5 @@ class Interpreter:
 
         # Check arity of the function
         if len(arguments) != callee.arity():
-            raise JesseRuntimeError(expr.paren.pos,f"expected {function.arity()} arguments but got {len(arguments)} yo")
+            raise JesseRuntimeError(expr.paren.pos,f"expected {callee.arity()} arguments but got {len(arguments)} yo")
         return callee.call(self,arguments)

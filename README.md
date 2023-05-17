@@ -12,9 +12,13 @@ jesse is an adaptation of the Lox programming language from the book [Crafting I
 git clone https://github.com/AkshayWarrier/jesse
 cd jesse
 ```
-- Find the `jesse` script in the folder. Create a `.jesse` file and use the script as follows to run your code.
+- Find the `jesse` script in the folder and make it an executable
 ```
-python3 jesse Example.jesse
+chmod +x jesse
+```
+- Create `.jesse` file and run it using the script
+```
+./jesse Example.jesse
 ```
 
 ## Documentation

@@ -1,9 +1,1 @@
-better call make_counter() {
-  cook i = 0gm;
-  better call count() {
-    i = i + 1gm;
-    say my name i;
-  }
-
-  return count;
-}
+say my name "hello";
