@@ -14,7 +14,7 @@ cd jesse
 ```
 - Find the `jesse` script in the folder and make it an executable
 ```
-chmod +x jesse
+chmod u+x jesse
 ```
 - Create `.jesse` file and run it using the script
 ```
